@@ -1,5 +1,6 @@
 package interpreter.model.exp;
 
+// enum (ADD, SUB, MUL, DIV) with a symbol for printing
 public enum ArithOp {
     ADD("+"), SUB("-"), MUL("*"), DIV("/");
 

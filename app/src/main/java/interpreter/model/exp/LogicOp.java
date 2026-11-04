@@ -5,6 +5,7 @@ public enum LogicOp {
 
     private final String symbol;
 
+    // both sides are always evaluated
     LogicOp(String symbol) {
         this.symbol = symbol;
     }
