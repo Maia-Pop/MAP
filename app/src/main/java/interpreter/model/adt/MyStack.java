@@ -13,8 +13,10 @@ public class MyStack<T> implements IStack<T> {
         stack.push(v);
     }
 
+
     @Override
     public T pop() throws ADTException {
+        // popping an empty stack
         if (stack.isEmpty()) {
             throw new ADTException("pop from an empty stack");
         }

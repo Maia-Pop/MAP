@@ -1,6 +1,6 @@
 package interpreter.exceptions;
 
-// exception for the ADT format
+// an invalid operation on a data structure
 
 public class ADTException extends MyException {
     public ADTException(String message) {
