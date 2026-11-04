@@ -5,6 +5,7 @@ import interpreter.exceptions.MyException;
 import interpreter.model.PrgState;
 import interpreter.model.type.IType;
 
+// throws “already declared” if the name exists, otherwise puts the type’s default value into the SymTable
 public record VarDeclStmt(String name, IType type) implements IStmt {   // S3
     @Override
     public PrgState execute(PrgState state) throws MyException {

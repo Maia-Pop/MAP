@@ -12,6 +12,7 @@ public class PrgState {
     private IList<IValue> out;
     private final IStmt originalProgram;
 
+    // pushing the program onto the stack
     public PrgState(IStack<IStmt> exeStack, IDictionary<String, IValue> symTable,
                     IList<IValue> out, IStmt program) {
         this.exeStack = exeStack;

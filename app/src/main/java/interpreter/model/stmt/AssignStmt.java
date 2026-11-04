@@ -6,6 +6,8 @@ import interpreter.model.PrgState;
 import interpreter.model.exp.IExp;
 import interpreter.model.value.IValue;
 
+// throws if the variable wasn’t declared, evaluates the expression, and throws if the value’s type differs from the declared type
+// otherwise it updates the SymTable..
 public record AssignStmt(String id, IExp exp) implements IStmt {   // S2
     @Override
     public PrgState execute(PrgState state) throws MyException {

@@ -2,6 +2,7 @@ package interpreter.model.stmt;
 
 import interpreter.model.PrgState;
 
+// pushes the second statement, then the first, so the first ends up on top and runs next
 public record CompStmt(IStmt first, IStmt second) implements IStmt {   // S1
     @Override
     public PrgState execute(PrgState state) {
