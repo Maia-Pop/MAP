@@ -74,14 +74,6 @@ public class Examples {
                                             new PrintStmt(new VarExp("a")),
                                             new PrintStmt(new VarExp("b")))))));
 
-    public static final IStmt[] ALL = {EX1, EX2, EX3};
-
-    public static final String[] DESCRIPTIONS = {
-            "int v; v = 2; print(v)",
-            "int a; int b; a = 2 + 3 * 5; b = a + 1; print(b)",
-            "bool a; int v; a = true; (if a then v = 2 else v = 3); print(v)"
-    };
-
     private Examples() {
     }
 }
