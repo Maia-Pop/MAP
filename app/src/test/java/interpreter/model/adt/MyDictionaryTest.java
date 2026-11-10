@@ -48,4 +48,23 @@ class MyDictionaryTest {
         dict.put("v", 2);
         assertEquals("{v -> 2}", dict.toString());
     }
+
+    @Test
+    void removeDeletesTheKey() throws ADTException {
+        dict.put("a", 5);
+        dict.remove("a");
+        assertFalse(dict.isDefined("a"));
+    }
+
+    @Test
+    void removeOfMissingKeyThrows() {
+        assertThrows(ADTException.class, () -> dict.remove("missing"));
+    }
+
+    @Test
+    void toMapReturnsTheEntries() {
+        dict.put("a", 5);
+        assertEquals(1, dict.toMap().size());
+        assertEquals(5, dict.toMap().get("a"));
+    }
 }

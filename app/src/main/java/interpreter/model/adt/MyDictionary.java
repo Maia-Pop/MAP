@@ -13,7 +13,6 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
         return map.containsKey(key);
     }
 
-    // returns variable with certain key
     @Override
     public V lookup(K key) throws ADTException {
         if (!map.containsKey(key)) {
@@ -22,19 +21,30 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
         return map.get(key);
     }
 
-    // adds new variable
     @Override
     public void put(K key, V value) {
         map.put(key, value);
     }
 
-    // changes an existing one and throws if the key is missing
     @Override
     public void update(K key, V value) throws ADTException {
         if (!map.containsKey(key)) {
             throw new ADTException("key " + key + " is not in the dictionary");
         }
         map.put(key, value);
+    }
+
+    @Override
+    public void remove(K key) throws ADTException {
+        if (!map.containsKey(key)) {
+            throw new ADTException("key " + key + " is not in the dictionary");
+        }
+        map.remove(key);
+    }
+
+    @Override
+    public Map<K, V> toMap() {
+        return Map.copyOf(map);
     }
 
     // {a -> 2, b -> 3}

@@ -26,6 +26,11 @@ public class MyList<T> implements IList<T> {
         return list.size();
     }
 
+    @Override
+    public List<T> toList() {
+        return List.copyOf(list);
+    }
+
     // {1, 2, 3}
     @Override
     public String toString() {

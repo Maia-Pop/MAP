@@ -3,6 +3,7 @@ package interpreter.model.adt;
 import interpreter.exceptions.ADTException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,5 +48,12 @@ class MyListTest {
         list.add("x");
         list.add("y");
         assertEquals("{x, y}", list.toString());
+    }
+
+    @Test
+    void toListIsInInsertionOrder() {
+        list.add("x");
+        list.add("y");
+        assertEquals(List.of("x", "y"), list.toList());
     }
 }
