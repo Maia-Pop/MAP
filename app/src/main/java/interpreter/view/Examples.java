@@ -15,6 +15,7 @@ import interpreter.model.type.IntType;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
 
+// expressed with nesting
 public class Examples {
     // Ex1: int v; v = 2; print(v)
     public static final IStmt EX1 = new CompStmt(new VarDeclStmt("v", new IntType()),
@@ -42,6 +43,7 @@ public class Examples {
                                     new AssignStmt("v", new ValueExp(new IntValue(3)))),
                                     new PrintStmt(new VarExp("v"))))));
 
+    // ALL is an array of the three programs
     public static final IStmt[] ALL = {EX1, EX2, EX3};
 
     public static final String[] DESCRIPTIONS = {

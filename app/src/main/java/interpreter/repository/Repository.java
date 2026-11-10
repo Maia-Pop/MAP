@@ -12,6 +12,7 @@ public class Repository implements IRepository {
         states.add(initialState);
     }
 
+    // returns first element
     @Override
     public PrgState getCrtPrg() {
         return states.get(0);
