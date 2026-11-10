@@ -11,17 +11,25 @@ import interpreter.model.value.IntValue;
 import interpreter.repository.Repository;
 import interpreter.view.Examples;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
-    private static PrgState newState(IStmt program) {
-        return PrgState.of(program);
+    @TempDir
+    Path dir;
+
+    private Controller controllerFor(PrgState state) {
+        var repo = new Repository(state, dir.resolve("log.txt").toString());
+        return new Controller(repo, false);   // display off
     }
 
-    private static PrgState run(IStmt program) throws MyException {
-        PrgState state = newState(program);
-        new Controller(new Repository(state), false).allStep();   // display off
+    private PrgState run(IStmt program) throws MyException {
+        PrgState state = PrgState.of(program);
+        controllerFor(state).allStep();
         return state;
     }
 
@@ -54,8 +62,8 @@ class ControllerTest {
 
     @Test
     void example1FollowsTheTraceFromTheLabDocument() throws MyException {
-        PrgState state = newState(Examples.EX1);
-        Controller controller = new Controller(new Repository(state), false);
+        PrgState state = PrgState.of(Examples.EX1);
+        Controller controller = controllerFor(state);
 
         controller.oneStep(state);   // S1: split int v; (...)
         assertEquals("{}", state.getSymTable().toString());
@@ -76,7 +84,7 @@ class ControllerTest {
     @Test
     void oneStepOnEmptyStackThrows() {
         PrgState state = TestSupport.emptyState();
-        Controller controller = new Controller(new Repository(state), false);
+        Controller controller = controllerFor(state);
         var ex = assertThrows(StatementException.class, () -> controller.oneStep(state));
         assertEquals("execution stack is empty", ex.getMessage());
     }
@@ -85,5 +93,21 @@ class ControllerTest {
     void errorInTheProgramStopsTheExecution() {
         IStmt bad = new AssignStmt("x", new ValueExp(new IntValue(1)));   // x never declared
         assertThrows(StatementException.class, () -> run(bad));
+    }
+
+    @Test
+    void logFileContainsTheFourSectionsInOrder() throws Exception {
+        run(Examples.EX1);
+        String log = Files.readString(dir.resolve("log.txt"));
+        int a = log.indexOf("ExeStack:"), b = log.indexOf("SymTable:"),
+                c = log.indexOf("Out:"), d = log.indexOf("FileTable:");
+        assertTrue(0 <= a && a < b && b < c && c < d);
+    }
+
+    @Test
+    void logFileHoldsTheInitialStateAndTheStateAfterEveryStep() throws Exception {
+        run(Examples.EX1);   // 5 steps
+        String log = Files.readString(dir.resolve("log.txt"));
+        assertEquals(6, log.split("ExeStack:", -1).length - 1);
     }
 }

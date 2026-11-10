@@ -12,3 +12,4 @@ build
 out/
 .vscode/
 .DS_Store
+log*.txt

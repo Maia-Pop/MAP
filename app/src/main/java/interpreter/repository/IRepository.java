@@ -1,8 +1,10 @@
 package interpreter.repository;
 
+import interpreter.exceptions.MyException;
 import interpreter.model.PrgState;
 
-// returns the current program state
 public interface IRepository {
     PrgState getCrtPrg();
+
+    void logPrgStateExec() throws MyException;
 }
