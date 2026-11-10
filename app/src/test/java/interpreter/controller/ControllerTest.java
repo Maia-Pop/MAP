@@ -110,4 +110,37 @@ class ControllerTest {
         String log = Files.readString(dir.resolve("log.txt"));
         assertEquals(6, log.split("ExeStack:", -1).length - 1);
     }
+
+    @Test
+    void fileExamplePrintsBothNumbersAndEndsWithAnEmptyFileTable() throws Exception {
+        Path in = dir.resolve("test.in");
+        Files.writeString(in, "15\n50\n");
+        PrgState state = run(Examples.fileExample(in.toString()));
+        assertEquals(2, state.getOut().size());
+        assertEquals(new IntValue(15), state.getOut().get(0));
+        assertEquals(new IntValue(50), state.getOut().get(1));
+        assertTrue(state.getFileTable().toMap().isEmpty());
+    }
+
+    @Test
+    void fileExampleWithAnEmptyFilePrintsTwoZeros() throws Exception {
+        Path in = dir.resolve("empty.in");
+        Files.writeString(in, "");
+        PrgState state = run(Examples.fileExample(in.toString()));
+        assertEquals(new IntValue(0), state.getOut().get(0));
+        assertEquals(new IntValue(0), state.getOut().get(1));
+    }
+
+    @Test
+    void fileExampleWithAMissingFileStopsWithAnError() {
+        String missing = dir.resolve("missing.in").toString();
+        assertThrows(StatementException.class, () -> run(Examples.fileExample(missing)));
+    }
+
+    @Test
+    void example5PrintsFive() throws MyException {
+        PrgState state = run(Examples.EX5);
+        assertEquals(1, state.getOut().size());
+        assertEquals(new IntValue(5), state.getOut().get(0));
+    }
 }
