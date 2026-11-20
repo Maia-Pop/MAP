@@ -13,6 +13,7 @@ import interpreter.model.stmt.VarDeclStmt;
 import interpreter.model.type.IntType;
 import interpreter.model.type.RefType;
 import interpreter.model.value.IntValue;
+import interpreter.model.value.RefValue;
 import interpreter.repository.Repository;
 import interpreter.view.Examples;
 import org.junit.jupiter.api.Test;
@@ -159,5 +160,40 @@ class ControllerTest {
         PrgState state = run(Examples.EX5);
         assertEquals(1, state.getOut().size());
         assertEquals(new IntValue(5), state.getOut().get(0));
+    }
+
+    @Test
+    void example6PrintsTheTwoReferencesAndLeavesTwoLocationsOnTheHeap() throws MyException {
+        PrgState state = run(Examples.EX6);
+        assertEquals(new RefValue(1, new IntType()), state.getSymTable().lookup("v"));
+        assertEquals(new RefValue(2, new RefType(new IntType())), state.getSymTable().lookup("a"));
+        assertEquals("{(1, int), (2, Ref(int))}", state.getOut().toString());
+        assertEquals("{1 -> 20, 2 -> (1, int)}", state.getHeap().toString());
+    }
+
+    @Test
+    void example7Prints20And25() throws MyException {
+        PrgState state = run(Examples.EX7);
+        assertEquals("{20, 25}", state.getOut().toString());
+        assertEquals("{1 -> 20, 2 -> (1, int)}", state.getHeap().toString());
+    }
+
+    @Test
+    void example8Prints20And35AndWritesTheHeap() throws MyException {
+        PrgState state = run(Examples.EX8);
+        assertEquals("{20, 35}", state.getOut().toString());
+        assertEquals("{1 -> 30}", state.getHeap().toString());
+    }
+
+    @Test
+    void example9Prints20BecauseTheCollectorIsSafe() throws MyException {
+        PrgState state = run(Examples.EX9);
+        assertEquals("{20}", state.getOut().toString());
+    }
+
+    @Test
+    void example10CountsDownFromFourToZero() throws MyException {
+        PrgState state = run(Examples.EX10);
+        assertEquals("{4, 3, 2, 1, 0}", state.getOut().toString());
     }
 }
