@@ -6,8 +6,6 @@ import interpreter.model.PrgState;
 import interpreter.model.exp.IExp;
 import interpreter.model.value.IValue;
 
-// throws if the variable wasn’t declared, evaluates the expression, and throws if the value’s type differs from the declared type
-// otherwise it updates the SymTable..
 public record AssignStmt(String id, IExp exp) implements IStmt {   // S2
     @Override
     public PrgState execute(PrgState state) throws MyException {
@@ -15,7 +13,7 @@ public record AssignStmt(String id, IExp exp) implements IStmt {   // S2
         if (!symTable.isDefined(id)) {
             throw new StatementException("variable " + id + " was not declared");
         }
-        IValue val = exp.eval(symTable);
+        IValue val = exp.eval(symTable, state.getHeap());
         if (!val.getType().equals(symTable.lookup(id).getType())) {
             throw new StatementException("declared type of variable " + id
                     + " and type of the assigned expression do not match");

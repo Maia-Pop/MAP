@@ -3,7 +3,9 @@ package interpreter.model.exp;
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
+import interpreter.model.adt.IHeap;
 import interpreter.model.adt.MyDictionary;
+import interpreter.model.adt.MyHeap;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
@@ -14,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RelationalExpTest {
     private IDictionary<String, IValue> symTable;
+    private final IHeap heap = new MyHeap();
 
     @BeforeEach
     void setUp() {
@@ -25,7 +28,7 @@ class RelationalExpTest {
     }
 
     private IValue eval(RelOp op, int a, int b) throws MyException {
-        return new RelationalExp(op, num(a), num(b)).eval(symTable);
+        return new RelationalExp(op, num(a), num(b)).eval(symTable, heap);
     }
 
     @Test
@@ -68,20 +71,20 @@ class RelationalExpTest {
     void usesTheValueOfVariables() throws MyException {
         symTable.put("a", new IntValue(5));
         IExp e = new RelationalExp(RelOp.LT, new VarExp("a"), num(7));
-        assertEquals(new BoolValue(true), e.eval(symTable));
+        assertEquals(new BoolValue(true), e.eval(symTable, heap));
     }
 
     @Test
     void firstOperandNotIntegerThrows() {
         IExp e = new RelationalExp(RelOp.LT, new ValueExp(new BoolValue(true)), num(1));
-        var ex = assertThrows(ExpressionException.class, () -> e.eval(symTable));
+        var ex = assertThrows(ExpressionException.class, () -> e.eval(symTable, heap));
         assertEquals("first operand is not an integer", ex.getMessage());
     }
 
     @Test
     void secondOperandNotIntegerThrows() {
         IExp e = new RelationalExp(RelOp.LT, num(1), new ValueExp(new BoolValue(true)));
-        var ex = assertThrows(ExpressionException.class, () -> e.eval(symTable));
+        var ex = assertThrows(ExpressionException.class, () -> e.eval(symTable, heap));
         assertEquals("second operand is not an integer", ex.getMessage());
     }
 }
