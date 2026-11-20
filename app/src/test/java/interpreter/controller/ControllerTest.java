@@ -6,7 +6,12 @@ import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
 import interpreter.model.exp.ValueExp;
 import interpreter.model.stmt.AssignStmt;
+import interpreter.model.stmt.CompStmt;
 import interpreter.model.stmt.IStmt;
+import interpreter.model.stmt.NewStmt;
+import interpreter.model.stmt.VarDeclStmt;
+import interpreter.model.type.IntType;
+import interpreter.model.type.RefType;
 import interpreter.model.value.IntValue;
 import interpreter.repository.Repository;
 import interpreter.view.Examples;
@@ -106,10 +111,21 @@ class ControllerTest {
     }
 
     @Test
-    void logFileHoldsTheInitialStateAndTheStateAfterEveryStep() throws Exception {
-        run(Examples.EX1);   // 5 steps
+    void logFileHoldsTheInitialStateAndTwoStatesForEveryStep() throws Exception {
+        run(Examples.EX1);   // 5 steps: before and after the garbage collection
         String log = Files.readString(dir.resolve("log.txt"));
-        assertEquals(6, log.split("ExeStack:", -1).length - 1);
+        assertEquals(11, log.split("ExeStack:", -1).length - 1);
+    }
+
+    @Test
+    void theGarbageCollectorRemovesTheLocationsThatNobodyReaches() throws MyException {
+        // Ref int v; new(v, 20); new(v, 30): location 1 is lost when v points to location 2
+        PrgState state = run(new CompStmt(new VarDeclStmt("v", new RefType(new IntType())),
+                new CompStmt(new NewStmt("v", new ValueExp(new IntValue(20))),
+                        new NewStmt("v", new ValueExp(new IntValue(30))))));
+        assertEquals(1, state.getHeap().getContent().size());
+        assertFalse(state.getHeap().isDefined(1));
+        assertEquals(new IntValue(30), state.getHeap().get(2));
     }
 
     @Test
