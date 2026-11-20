@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RepositoryTest {
     @TempDir
-    Path dir;
+    Path dir; // gives each test its own empty file then deletes it
 
     @Test
-    void getCrtPrgReturnsTheStoredState() {
+    void getCrtPrgReturnsTheStoredState() { // creates a program state and a repository holding it
         PrgState state = TestSupport.emptyState();
         IRepository repo = new Repository(state, dir.resolve("log.txt").toString());
         assertSame(state, repo.getCrtPrg());

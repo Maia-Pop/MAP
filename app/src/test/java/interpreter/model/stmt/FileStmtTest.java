@@ -36,29 +36,29 @@ class FileStmtTest {
         new VarDeclStmt("x", new IntType()).execute(state);
     }
 
-    // ---------- openRFile (S8) ----------
+    // openRFile (S8)
 
     @Test
-    void openAddsTheFileToTheFileTable() throws MyException {
+    void openAddsTheFileToTheFileTable() throws MyException { // adds the file to the FileTable
         new OpenRFileStmt(file).execute(state);
         assertTrue(state.getFileTable().isDefined(fileName));
     }
 
     @Test
-    void openWithANonStringExpressionThrows() {
+    void openWithANonStringExpressionThrows() { // with a non-string throws.
         var stmt = new OpenRFileStmt(new ValueExp(new IntValue(1)));
         assertThrows(StatementException.class, () -> stmt.execute(state));
     }
 
     @Test
-    void openingTheSameFileTwiceThrows() throws MyException {
+    void openingTheSameFileTwiceThrows() throws MyException { // opening an already open file throws
         new OpenRFileStmt(file).execute(state);
         assertThrows(StatementException.class,
                 () -> new OpenRFileStmt(file).execute(state));
     }
 
     @Test
-    void openingAMissingFileThrows() {
+    void openingAMissingFileThrows() { // opening a file that doesn’t exist throws
         var missing = new ValueExp(new StringValue(dir.resolve("missing.in").toString()));
         assertThrows(StatementException.class,
                 () -> new OpenRFileStmt(missing).execute(state));

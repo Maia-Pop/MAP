@@ -30,7 +30,7 @@ public class PrgState {
         exeStack.push(program);
     }
 
-    // a state with empty structures
+    // a state with empty structures(fileTable)
     public static PrgState of(IStmt program) {
         return new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(),
                 new MyDictionary<>(), program);
